@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
-import Navbar from './src/Components/travel/Navbar';
-import Footer from './src/Components/travel/Footer';
+import Navbar from './Components/travel/Navbar';
+import Footer from './Components/travel/Footer';
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
