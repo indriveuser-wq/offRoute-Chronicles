@@ -105,11 +105,10 @@ export default function About() {
             >
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+                  src="https://res.cloudinary.com/ddmleagbc/image/upload/v1769514555/IMG-20251220-WA0071_manhwg.jpg"
                   alt="Traveler"
                   className="w-full h-[500px] object-cover rounded-3xl"
                   onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80'; }}
-                />
                 />
                 <motion.div
                   animate={{ rotate: 360 }}

@@ -69,7 +69,7 @@ export default function AboutSection() {
                 className="w-full h-[500px] rounded-3xl overflow-hidden"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+                  src="https://res.cloudinary.com/ddmleagbc/image/upload/v1769514554/20251129_141109_pjei4x.jpg"
                   alt="Traveler"
                   className="w-full h-full object-cover"
                   onError={(e) => {
