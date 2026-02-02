@@ -33,10 +33,10 @@ const CountUp = ({ end, suffix = '' }) => {
 
 export default function AboutSection() {
   const stats = [
-    { icon: Globe, value: 45, suffix: '+', label: 'Countries Visited' },
-    { icon: Camera, value: 200, suffix: '+', label: 'Stories Shared' },
-    { icon: Heart, value: 50, suffix: 'K+', label: 'Community Members' },
-    { icon: MapPin, value: 150, suffix: '+', label: 'Destinations' },
+    { icon: Globe, value: 15, suffix: '+', label: 'Ciities Visited' },
+    { icon: Camera, value: 20, suffix: '+', label: 'Stories Shared' },
+    { icon: Heart, value: 1, suffix: 'K+', label: 'People Encountered' },
+    { icon: MapPin, value: 50, suffix: '+', label: 'Destinations' },
   ];
 
   return (
@@ -115,15 +115,15 @@ export default function AboutSection() {
             </h2>
             
             <p className="text-[#1a1a2e]/70 text-lg leading-relaxed mb-6">
-              Welcome to Wanderlust Chronicles, where every destination has a story waiting to be told. 
-              I'm a passionate traveler dedicated to uncovering hidden gems and sharing authentic experiences 
-              from around the globe.
+              Welcome to offRoute Chronicles, where every destination has a story waiting to be told. 
+              I'm a occasional traveler dedicated to uncovering hidden gems and sharing authentic experiences 
+              in simplest way.
             </p>
             
             <p className="text-[#1a1a2e]/70 leading-relaxed mb-10">
-              From the bustling streets of Tokyo to the serene beaches of the Maldives, 
+              From the bustling streets of Kathmandu to the serene lakes of Pokhara, 
               join me as I explore diverse cultures, savor local cuisines, and discover 
-              the beauty that our world has to offer.
+              the beauty that our surrounding has to offer.
             </p>
 
             {/* Stats Grid */}

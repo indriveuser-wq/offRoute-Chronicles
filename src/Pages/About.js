@@ -4,18 +4,18 @@ import { MapPin, Camera, Heart, Globe, Mail, Instagram, Twitter, Youtube } from 
 import Newsletter from '../Components/travel/Newsletter';
 
 const stats = [
-  { icon: Globe, value: '45+', label: 'Countries Explored' },
-  { icon: Camera, value: '200+', label: 'Stories Shared' },
-  { icon: Heart, value: '50K+', label: 'Community Members' },
-  { icon: MapPin, value: '150+', label: 'Destinations Documented' },
+  { icon: Globe, value: '15+', label: 'Cities Explored' },
+  { icon: Camera, value: '20+', label: 'Stories Shared' },
+  { icon: Heart, value: '1K+', label: 'People Encountered' },
+  { icon: MapPin, value: '50+', label: 'Destinations Documented' },
 ];
 
 const timeline = [
-  { year: '2018', title: 'The Beginning', description: 'Started documenting travels with a simple blog and a camera.' },
-  { year: '2019', title: 'First Viral Story', description: 'Our piece on hidden gems in Portugal reached millions of readers.' },
-  { year: '2020', title: 'Community Growth', description: 'Built a community of passionate travelers during challenging times.' },
-  { year: '2022', title: 'Global Recognition', description: 'Featured in major travel publications worldwide.' },
-  { year: '2024', title: 'New Chapter', description: 'Launching interactive travel guides and local experiences.' },
+  { year: '2018', title: 'The Beginning', description: 'Went for the first hike.' },
+  { year: '2019', title: 'First Conference', description: 'Attended the first conference in Pokhara.' },
+  { year: '2020', title: 'First Hillstation', description: 'Family tour to West India.' },
+  { year: '2023', title: 'Migrated to New City', description: 'Moved out from hometown to a new city.' },
+  { year: '2026', title: 'New Chapter', description: 'Launching interactive travel guides and local experiences.' },
 ];
 
 export default function About() {
@@ -121,7 +121,7 @@ export default function About() {
                   viewport={{ once: true }}
                   className="absolute -bottom-6 -left-6 bg-[#c17f59] text-white p-6 rounded-2xl"
                 >
-                  <p className="text-3xl font-light">6+</p>
+                  <p className="text-3xl font-light">3+</p>
                   <p className="text-sm opacity-80">Years of Adventures</p>
                 </motion.div>
               </div>
@@ -136,21 +136,23 @@ export default function About() {
             >
               <span className="text-[#c17f59] text-sm tracking-[0.3em] uppercase">The Journey</span>
               <h2 className="text-4xl font-light text-[#1a1a2e]">
-                From a Passion to a <span className="italic font-serif text-[#c17f59]">Movement</span>
+                From a Curiosity to a <span className="italic font-serif text-[#c17f59]">Personal Journey</span>
               </h2>
               <p className="text-[#1a1a2e]/70 leading-relaxed">
-                offRoute Chronicles started as a simple travel diary back in 2018. What began as personal 
-                notes and photographs from solo adventures has evolved into a thriving community of passionate 
-                travelers from around the globe.
+                offRoute Chronicles began in 2018 as a simple space to document my travels. What started as casual 
+                notes and photos from weekend trips and solo explorations slowly turned into a place where I share 
+                moments from places close to home and beyond.
               </p>
               <p className="text-[#1a1a2e]/70 leading-relaxed">
-                Our mission is simple: to inspire authentic travel experiences through genuine storytelling. 
-                We believe every destination has a unique story waiting to be told, and every traveler has 
-                the potential to discover extraordinary moments in ordinary places.
+                I’m just a student who enjoys roaming around—exploring local destinations, learning about culture, 
+                trying different foods, and walking trails and hikes whenever I get the chance. This blog is my 
+                way of capturing those experiences as they happen, without filters or perfection.
               </p>
               <p className="text-[#1a1a2e]/70 leading-relaxed">
-                Today, we're proud to share stories from over 45 countries, guide curious explorers to 
-                hidden gems, and build a community that values sustainable and meaningful travel.
+                Through offRoute Chronicles, I share stories from the places I visit, small discoveries that often 
+                go unnoticed, and experiences that make travel feel personal and meaningful. It’s not about 
+                ticking destinations off a list, but about enjoying the journey and appreciating the details along 
+                the way.
               </p>
             </motion.div>
           </div>
@@ -296,7 +298,6 @@ export default function About() {
             <div className="flex justify-center gap-6 mb-12">
               {[
                 { icon: Instagram, label: 'Instagram' },
-                { icon: Twitter, label: 'Twitter' },
                 { icon: Youtube, label: 'YouTube' },
                 { icon: Mail, label: 'Email' },
               ].map((social) => (
