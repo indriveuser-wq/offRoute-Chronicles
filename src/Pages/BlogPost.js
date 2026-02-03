@@ -30,12 +30,12 @@ export default function BlogPost() {
   });
 
   const { data: relatedPosts = [] } = useQuery({
-    queryKey: ['relatedPosts', post?.category],
+    queryKey: ['relatedPosts', post?.category, id],
     queryFn: async () => {
       const allPosts = await base44.entities.BlogPost.list();
       return allPosts.filter(p => p.category === post.category && p.id !== id).slice(0, 3);
     },
-    enabled: !!post?.category,
+    enabled: !!post?.category && !!id,
   });
 
   const { data: galleryImages = [] } = useQuery({

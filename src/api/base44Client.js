@@ -194,6 +194,42 @@ class Base44Client {
             created_date: new Date(),
           };
         },
+        // Fetch posts for a specific destination (by id or name)
+        listByDestination: async (destinationIdOrName) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              // First try by destination_id
+              let { data, error } = await supabaseClient
+                .from('blog_posts')
+                .select('*')
+                .eq('destination_id', destinationIdOrName)
+                .order('created_date', { ascending: false });
+
+              if (error) throw error;
+              if (data && data.length > 0) return data;
+
+              // Fall back to matching by destination name
+              const { data: dataByName, error: nameErr } = await supabaseClient
+                .from('blog_posts')
+                .select('*')
+                .eq('destination', destinationIdOrName)
+                .order('created_date', { ascending: false });
+
+              if (nameErr) throw nameErr;
+              return dataByName || [];
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return [];
+            }
+          }
+
+          // Fall back to mock data matching destination name
+          return mockBlogPosts.filter(p => p.destination === destinationIdOrName);
+        },
       },
       GalleryImage: {
         list: async (postId) => {
@@ -252,46 +288,260 @@ class Base44Client {
             {
               id: '1',
               name: 'Tokyo, Japan',
+              country: 'Japan',
               description: 'A vibrant metropolis blending tradition and modernity',
               image: 'https://images.unsplash.com/photo-1540959375944-7049f642e9d5?w=500&h=350&fit=crop',
-              rating: 4.8,
+              category: 'city',
+              featured: true,
             },
             {
               id: '2',
               name: 'Bangkok, Thailand',
+              country: 'Thailand',
               description: 'The city of angels with stunning temples and markets',
               image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=350&fit=crop',
-              rating: 4.6,
+              category: 'food_cafe',
+              featured: true,
             },
             {
               id: '3',
               name: 'Paris, France',
+              country: 'France',
               description: 'The city of love and art',
               image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=350&fit=crop',
-              rating: 4.9,
+              category: 'city',
+              featured: true,
             },
             {
               id: '4',
               name: 'Bali, Indonesia',
+              country: 'Indonesia',
               description: 'Tropical paradise with temples and beaches',
               image: 'https://images.unsplash.com/photo-1537225228614-b4fad34a0b60?w=500&h=350&fit=crop',
-              rating: 4.7,
+              category: 'adventure',
+              featured: false,
             },
             {
               id: '5',
               name: 'Kathmandu, Nepal',
+              country: 'Nepal',
               description: 'Gateway to the Himalayas with rich culture',
               image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=350&fit=crop',
-              rating: 4.5,
+              category: 'heritage',
+              featured: false,
             },
             {
               id: '6',
               name: 'Maldives',
+              country: 'Maldives',
               description: 'Island nation with crystal clear waters',
               image: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=500&h=350&fit=crop',
-              rating: 4.9,
+              category: 'adventure',
+              featured: false,
             },
           ];
+        },
+        get: async (id) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              const { data, error } = await supabaseClient
+                .from('destinations')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+              if (error) throw error;
+              return data || null;
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return null;
+            }
+          }
+
+          // Fall back to mock data
+          const mock = [
+            {
+              id: '1',
+              name: 'Tokyo, Japan',
+              country: 'Japan',
+              description: 'A vibrant metropolis blending tradition and modernity',
+              image: 'https://images.unsplash.com/photo-1540959375944-7049f642e9d5?w=500&h=350&fit=crop',
+              category: 'city',
+              featured: true,
+            }
+          ];
+
+          return mock.find(d => d.id === id) || null;
+        },
+      },
+      Comment: {
+        filter: async (filters = {}) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              let query = supabaseClient.from('comments').select('*');
+              
+              if (filters.post_id) {
+                query = query.eq('post_id', filters.post_id);
+              }
+              
+              const { data, error } = await query.order('created_date', { ascending: false });
+              
+              if (error) throw error;
+              return data || [];
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return [];
+            }
+          }
+
+          return [];
+        },
+        create: async (commentData) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              const { data, error } = await supabaseClient
+                .from('comments')
+                .insert([{
+                  post_id: commentData.post_id,
+                  author_name: commentData.author_name,
+                  author_email: commentData.author_email,
+                  content: commentData.content,
+                  parent_id: commentData.parent_id || null,
+                  created_date: new Date().toISOString(),
+                }])
+                .select();
+              
+              if (error) throw error;
+              return data?.[0] || null;
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return null;
+            }
+          }
+
+          return null;
+        },
+      },
+      Reaction: {
+        filter: async (filters = {}) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              let query = supabaseClient.from('reactions').select('*');
+              
+              if (filters.entity_type) {
+                query = query.eq('entity_type', filters.entity_type);
+              }
+              if (filters.entity_id) {
+                query = query.eq('entity_id', filters.entity_id);
+              }
+              if (filters.user_identifier) {
+                query = query.eq('user_identifier', filters.user_identifier);
+              }
+              
+              const { data, error } = await query;
+              
+              if (error) throw error;
+              return data || [];
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return [];
+            }
+          }
+
+          return [];
+        },
+        create: async (reactionData) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              const { data, error } = await supabaseClient
+                .from('reactions')
+                .insert([{
+                  entity_type: reactionData.entity_type,
+                  entity_id: reactionData.entity_id,
+                  reaction_type: reactionData.reaction_type,
+                  user_identifier: reactionData.user_identifier,
+                  created_date: new Date().toISOString(),
+                }])
+                .select();
+              
+              if (error) throw error;
+              return data?.[0] || null;
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return null;
+            }
+          }
+
+          return null;
+        },
+        delete: async (reactionId) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              const { error } = await supabaseClient
+                .from('reactions')
+                .delete()
+                .eq('id', reactionId);
+              
+              if (error) throw error;
+              return true;
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return false;
+            }
+          }
+
+          return false;
+        },
+      },
+      Subscriber: {
+        create: async (subscriberData) => {
+          if (USE_SUPABASE) {
+            await supabasePromise;
+          }
+
+          if (supabaseClient) {
+            try {
+              const { data, error } = await supabaseClient
+                .from('subscribers')
+                .insert([{
+                  email: subscriberData.email,
+                  created_date: new Date().toISOString(),
+                }])
+                .select();
+              
+              if (error) throw error;
+              return data?.[0] || null;
+            } catch (error) {
+              console.error('Supabase error:', error);
+              return null;
+            }
+          }
+
+          return null;
         },
       },
     };

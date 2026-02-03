@@ -18,18 +18,21 @@
       "type": "string",
       "description": "Main image URL"
     },
-    "continent": {
+    "category": {
       "type": "string",
       "enum": [
-        "europe",
-        "asia",
-        "africa",
-        "north_america",
-        "south_america",
-        "oceania",
-        "antarctica"
+        "city",
+        "local",
+        "adventure",
+        "food_cafe",
+        "heritage"
       ],
-      "description": "Continent"
+      "description": "Destination category"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show as featured destination on the home page"
     },
     "best_season": {
       "type": "string",

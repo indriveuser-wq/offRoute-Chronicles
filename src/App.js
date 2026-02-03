@@ -5,6 +5,7 @@ import Layout from './Layout';
 import Home from './Pages/Home';
 import Stories from './Pages/Stories';
 import Destinations from './Pages/Destinations';
+import DestinationDetail from './Pages/DestinationDetail';
 import About from './Pages/About';
 import BlogPost from './Pages/BlogPost';
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/stories" element={<Stories />} />
             <Route path="/destinations" element={<Destinations />} />
+            <Route path="/destinations/:id" element={<DestinationDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog/:id" element={<BlogPost />} />
           </Route>

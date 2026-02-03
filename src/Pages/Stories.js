@@ -27,9 +27,32 @@ const categoryColors = {
   mountains: 'bg-slate-600',
 };
 
+// Normalize category values and handle common aliases so filtering matches stored data
+function normalizeCategory(cat) {
+  if (!cat) return '';
+  const s = cat.toString().toLowerCase().trim();
+  const normalized = s.replace(/\s+/g, '_');
+  const aliases = {
+    food_cafe: 'food',
+    foodcafe: 'food',
+    heritage: 'culture',
+    mountain: 'mountains',
+    mountainss: 'mountains',
+  };
+  return aliases[normalized] || normalized;
+}
+
 export default function Stories() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsSmallScreen(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
@@ -37,16 +60,18 @@ export default function Stories() {
   });
 
   const filteredPosts = posts.filter(post => {
-    const matchesCategory = activeCategory === 'all' || post.category === activeCategory;
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const postCategory = normalizeCategory(post.category);
+    const matchesCategory = activeCategory === 'all' || postCategory === activeCategory;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = post.title.toLowerCase().includes(q) ||
+                          post.excerpt.toLowerCase().includes(q);
     return matchesCategory && matchesSearch;
   });
 
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       {/* Hero Section with Background */}
-      <section className="relative h-64 md:h-80 overflow-hidden pt-20">
+      <section className="relative min-h-[24rem] md:h-80 overflow-hidden pt-20">
         <motion.img
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -54,6 +79,10 @@ export default function Stories() {
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80"
           alt="Stories background"
           className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+          width="1920"
+          height="720"
           onError={(e) => {
             e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80';
           }}
@@ -62,8 +91,8 @@ export default function Stories() {
         
         {/* Header Content */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={isSmallScreen ? { opacity: 0 } : { opacity: 0, y: 20 }}
+          animate={isSmallScreen ? { opacity: 1 } : { opacity: 1, y: 0 }}
           className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4"
         >
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">
@@ -124,16 +153,17 @@ export default function Stories() {
             {filteredPosts.map((post, index) => (
               <motion.div
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.05 }}
+                layout
+                initial={isSmallScreen ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                animate={isSmallScreen ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                exit={isSmallScreen ? { opacity: 0 } : { opacity: 0, y: -20 }}
+                transition={{ delay: isSmallScreen ? 0 : index * 0.05 }}
                 className="cursor-pointer"
               >
                 <Link to={`/blog/${post.id}`}>
                   <motion.div 
                     className="group"
-                    whileHover={{ y: -8 }}
+                    whileHover={!isSmallScreen ? { y: -8 } : undefined}
                     transition={{ duration: 0.3 }}
                   >
                     {/* Image Container */}
@@ -142,7 +172,11 @@ export default function Stories() {
                         src={post.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&h=350&fit=crop'}
                         alt={post.title}
                         className="w-full h-full object-cover"
-                        whileHover={{ scale: 1.1 }}
+                        loading="lazy"
+                        decoding="async"
+                        width="500"
+                        height="350"
+                        whileHover={!isSmallScreen ? { scale: 1.1 } : undefined}
                         transition={{ duration: 0.6 }}
                         onError={(e) => {
                           e.target.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&h=350&fit=crop';
@@ -152,16 +186,16 @@ export default function Stories() {
                       <motion.span 
                         initial={{ opacity: 0, y: -10 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        className={`absolute top-4 left-4 text-xs font-semibold px-3 py-1 rounded-full text-white ${categoryColors[post.category] || 'bg-gray-500'}`}
+                        className={`absolute top-4 left-4 text-xs font-semibold px-3 py-1 rounded-full text-white ${categoryColors[normalizeCategory(post.category)] || 'bg-gray-500'}`}
                       >
-                        {post.category}
+                        {(post.category || '').toLowerCase() || 'Uncategorized'}
                       </motion.span>
                       
                       {/* Read More Icon */}
                       <motion.div
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileHover={{ opacity: 1, scale: 1 }}
-                        className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
+                        initial={isSmallScreen ? { opacity: 1 } : { opacity: 0, scale: 0 }}
+                        whileHover={!isSmallScreen ? { opacity: 1, scale: 1 } : undefined}
+                        className={`absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center transition-all duration-300 ${isSmallScreen ? 'opacity-90' : 'opacity-0 group-hover:opacity-100'}`}
                       >
                         <ArrowUpRight className="w-5 h-5 text-[#1a1a2e]" />
                       </motion.div>

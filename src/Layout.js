@@ -24,6 +24,9 @@ export default function Layout({ children, currentPageName }) {
         
         body {
           font-family: 'Inter', sans-serif;
+          background: var(--color-background);
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
         }
         
         .font-serif {

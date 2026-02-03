@@ -38,10 +38,14 @@ export default function FeaturedStories({ posts }) {
               className="lg:row-span-2"
             >
               <Link to={`/blog/${featured[0].id}`}>
-                <div className="group relative h-[500px] lg:h-full rounded-3xl overflow-hidden cursor-pointer">
+                <div className="group relative h-[300px] md:h-[500px] lg:h-full rounded-3xl overflow-hidden cursor-pointer">
                   <motion.img
                     src={featured[0].image}
                     alt={featured[0].title}
+                    loading="lazy"
+                    decoding="async"
+                    width="1200"
+                    height="800"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop';
@@ -94,10 +98,14 @@ export default function FeaturedStories({ posts }) {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <Link to={`/blog/${post.id}`}>
-                  <div className="group relative h-[240px] rounded-3xl overflow-hidden cursor-pointer">
+                  <div className="group relative h-[220px] md:h-[240px] rounded-3xl overflow-hidden cursor-pointer">
                     <motion.img
                       src={post.image}
                       alt={post.title}
+                      loading="lazy"
+                      decoding="async"
+                      width="800"
+                      height="450"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       onError={(e) => {
                         e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=350&fit=crop';

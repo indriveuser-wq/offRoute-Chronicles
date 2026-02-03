@@ -25,6 +25,7 @@ export default function Home() {
       <HeroSection />
       <FeaturedStories posts={posts} />
       <AboutSection />
+
       <DestinationExplorer destinations={destinations} />
       <BlogGrid posts={posts} />
       <Newsletter />

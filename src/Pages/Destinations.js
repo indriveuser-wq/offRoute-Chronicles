@@ -3,20 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '../api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ArrowRight, Compass, Sun } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ReactionButtons from '../Components/blog/ReactionButtons';
 
-const continentLabels = {
-  europe: 'Europe',
-  asia: 'Asia',
-  africa: 'Africa',
-  north_america: 'North America',
-  south_america: 'South America',
-  oceania: 'Oceania',
-  antarctica: 'Antarctica',
-};
-
 export default function Destinations() {
-  const [activeContinent, setActiveContinent] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('all');
   const [hoveredId, setHoveredId] = useState(null);
 
   const { data: destinations = [], isLoading } = useQuery({
@@ -24,11 +15,16 @@ export default function Destinations() {
     queryFn: () => base44.entities.Destination.list(),
   });
 
-  const continents = ['all', ...new Set(destinations.map(d => d.continent).filter(Boolean))];
+  const categories = ['all', 'city', 'local', 'adventure', 'food_cafe', 'heritage'];
+  const categoryLabels = {
+    city: 'City',
+    local: 'Local',
+    adventure: 'Adventure',
+    food_cafe: 'Food & Cafe',
+    heritage: 'Heritage',
+  };
   
-  const filteredDestinations = activeContinent === 'all' 
-    ? destinations 
-    : destinations.filter(d => d.continent === activeContinent);
+  const filteredDestinations = activeCategory === 'all' ? destinations : destinations.filter(d => d.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-[#1a1a2e]">
@@ -77,22 +73,23 @@ export default function Destinations() {
       {/* Filters */}
       <section className="py-12 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
+          {/* Category Filter */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-wrap justify-center gap-3 mb-12"
           >
-            {continents.map((continent) => (
+            {categories.map((cat) => (
               <button
-                key={continent}
-                onClick={() => setActiveContinent(continent)}
-                className={`px-6 py-3 rounded-full text-sm transition-all duration-300 ${
-                  activeContinent === continent
-                    ? 'bg-[#c17f59] text-white'
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-5 py-2 rounded-full text-sm transition-all duration-300 ${
+                  activeCategory === cat
+                    ? 'bg-white text-[#1a1a2e]'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
               >
-                {continent === 'all' ? 'All Continents' : continentLabels[continent] || continent}
+                {cat === 'all' ? 'All Categories' : categoryLabels[cat] || cat}
               </button>
             ))}
           </motion.div>
@@ -129,27 +126,35 @@ export default function Destinations() {
                     onMouseLeave={() => setHoveredId(null)}
                     className="group relative"
                   >
-                    <div className="relative h-96 rounded-3xl overflow-hidden cursor-pointer">
-                      <motion.img
-                        src={destination.image}
-                        alt={destination.name}
-                        className="w-full h-full object-cover"
-                        animate={{ 
-                          scale: hoveredId === destination.id ? 1.1 : 1 
-                        }}
-                        transition={{ duration: 0.7 }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a2e] via-[#1a1a2e]/30 to-transparent" />
-                      
-                      {/* Content */}
-                      <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                        <motion.span 
-                          className="text-[#c17f59] text-xs tracking-wider uppercase mb-2"
-                          animate={{ y: hoveredId === destination.id ? -10 : 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {destination.country}
-                        </motion.span>
+                    <Link to={`/destinations/${destination.id}`} className="block">
+                      <div className="relative h-96 rounded-3xl overflow-hidden cursor-pointer">
+                        <motion.img
+                          src={destination.image}
+                          alt={destination.name}
+                          className="w-full h-full object-cover"
+                          animate={{ 
+                            scale: hoveredId === destination.id ? 1.1 : 1 
+                          }}
+                          transition={{ duration: 0.7 }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a2e] via-[#1a1a2e]/30 to-transparent" />
+
+                        {/* Category Badge */}
+                        {destination.category && (
+                          <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs bg-white/10 text-white/80">
+                            {categoryLabels[destination.category] || destination.category}
+                          </span>
+                        )}
+                        
+                        {/* Content */}
+                        <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                          <motion.span 
+                            className="text-[#c17f59] text-xs tracking-wider uppercase mb-2"
+                            animate={{ y: hoveredId === destination.id ? -10 : 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            {destination.country}
+                          </motion.span>
                         
                         <motion.h3 
                           className="text-3xl text-white font-light mb-2"
@@ -241,7 +246,8 @@ export default function Destinations() {
                         animate={{ opacity: hoveredId === destination.id ? 1 : 0 }}
                         transition={{ duration: 0.3 }}
                       />
-                    </div>
+                      </div>
+                    </Link>
                   </motion.div>
                 ))
               )}

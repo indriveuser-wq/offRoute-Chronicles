@@ -73,7 +73,7 @@ export default function Newsletter() {
           </p>
 
           <form onSubmit={handleSubmit} className="relative max-w-md mx-auto">
-            <div className="relative">
+            <div className="relative flex items-center">
               <Input
                 id="newsletter-email"
                 name="email"
@@ -81,14 +81,14 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full pl-6 pr-16 py-6 rounded-full bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/50 focus:bg-white/20 focus:border-white/40 transition-all"
+                className="w-full pl-6 pr-14 py-6 rounded-full bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/50 focus:bg-white/20 focus:border-white/40 transition-all"
               />
               <motion.button
                 type="submit"
                 disabled={isSubmitting || isSuccess}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#c17f59] hover:bg-[#f4e8d8] transition-colors disabled:opacity-70"
+                className="absolute right-1.5 w-11 h-11 bg-white rounded-full flex items-center justify-center text-[#c17f59] hover:bg-[#f4e8d8] transition-colors disabled:opacity-70 flex-shrink-0"
               >
                 {isSuccess ? (
                   <motion.div

@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Compass } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ReactionButtons from '../blog/ReactionButtons';
 
-const continentLabels = {
-  europe: 'Europe',
-  asia: 'Asia',
-  africa: 'Africa',
-  north_america: 'North America',
-  south_america: 'South America',
-  oceania: 'Oceania',
-};
-
 export default function DestinationExplorer({ destinations }) {
-  const [activeContinent, setActiveContinent] = useState('all');
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [maxVisible, setMaxVisible] = useState(6);
 
-  const continents = ['all', ...new Set(destinations?.map(d => d.continent).filter(Boolean))];
-  
-  const filteredDestinations = activeContinent === 'all' 
-    ? destinations 
-    : destinations?.filter(d => d.continent === activeContinent);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 640px)');
+    const update = (e) => setMaxVisible(e.matches ? 3 : 6);
+    // set initial
+    update(mq);
+    // add listener
+    if (mq.addEventListener) mq.addEventListener('change', update);
+    else if (mq.addListener) mq.addListener(update);
+
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', update);
+      else if (mq.removeListener) mq.removeListener(update);
+    };
+  }, []);
 
   return (
     <section className="py-24 px-4 md:px-8 bg-[#1a1a2e] relative overflow-hidden">
@@ -46,36 +48,13 @@ export default function DestinationExplorer({ destinations }) {
           </h2>
         </motion.div>
 
-        {/* Continent Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-12"
-        >
-          {continents.map((continent) => (
-            <button
-              key={continent}
-              onClick={() => setActiveContinent(continent)}
-              className={`px-6 py-2 rounded-full text-sm transition-all duration-300 ${
-                activeContinent === continent
-                  ? 'bg-[#c17f59] text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
-              }`}
-            >
-              {continent === 'all' ? 'All' : continentLabels[continent] || continent}
-            </button>
-          ))}
-        </motion.div>
-
         {/* Destinations Grid */}
         <motion.div 
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {filteredDestinations?.slice(0, 6).map((destination, index) => (
+            {destinations?.slice(0, maxVisible).map((destination, index) => (
               <motion.div
                 key={destination.id}
                 layout
@@ -87,15 +66,16 @@ export default function DestinationExplorer({ destinations }) {
                 onMouseLeave={() => setHoveredCard(null)}
                 className="group relative"
               >
-                <div 
-                  className="relative h-80 rounded-2xl overflow-hidden cursor-pointer"
-                  style={{
-                    transform: hoveredCard === destination.id 
-                      ? 'perspective(1000px) rotateY(5deg) rotateX(5deg)' 
-                      : 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
-                    transition: 'transform 0.5s ease-out',
-                  }}
-                >
+                <Link to={`/destinations/${destination.id}`} className="block">
+                  <div 
+                    className="relative h-80 rounded-2xl overflow-hidden cursor-pointer"
+                    style={{
+                      transform: hoveredCard === destination.id 
+                        ? 'perspective(1000px) rotateY(5deg) rotateX(5deg)' 
+                        : 'perspective(1000px) rotateY(0deg) rotateX(0deg)',
+                      transition: 'transform 0.5s ease-out',
+                    }}
+                  >
                   <img
                     src={destination.image}
                     alt={destination.name}
@@ -152,7 +132,8 @@ export default function DestinationExplorer({ destinations }) {
                     animate={{ opacity: hoveredCard === destination.id ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   />
-                </div>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </AnimatePresence>
