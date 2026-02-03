@@ -66,11 +66,15 @@ export default function AboutSection() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="w-full h-[500px] rounded-3xl overflow-hidden"
+                className="w-full h-[300px] md:h-[500px] rounded-3xl overflow-hidden"
               >
                 <img
                   src="https://res.cloudinary.com/ddmleagbc/image/upload/v1769514554/20251129_141109_pjei4x.jpg"
                   alt="Traveler"
+                  loading="lazy"
+                  decoding="async"
+                  width="1200"
+                  height="800"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80';
@@ -84,7 +88,7 @@ export default function AboutSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="absolute -bottom-8 -right-8 bg-white rounded-2xl p-6 shadow-xl max-w-xs"
+                className="absolute -bottom-12 -right-4 md:-bottom-8 md:-right-8 bg-white rounded-2xl p-4 md:p-6 shadow-xl max-w-xs"
               >
                 <p className="text-[#1a1a2e]/80 text-sm italic">
                   "Travel is the only thing you buy that makes you richer."
@@ -96,7 +100,7 @@ export default function AboutSection() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-4 -left-4 w-24 h-24 border-2 border-[#c17f59]/30 rounded-full"
+                className="absolute -top-3 -left-3 w-16 md:w-24 h-16 md:h-24 border-2 border-[#c17f59]/30 rounded-full"
               />
             </div>
           </motion.div>

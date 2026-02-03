@@ -107,21 +107,25 @@ export default function About() {
                 <img
                   src="https://res.cloudinary.com/ddmleagbc/image/upload/v1769514555/IMG-20251220-WA0071_manhwg.jpg"
                   alt="Traveler"
-                  className="w-full h-[500px] object-cover rounded-3xl"
+                  loading="lazy"
+                  decoding="async"
+                  width="1200"
+                  height="800"
+                  className="w-full h-[320px] md:h-[500px] object-cover rounded-3xl"
                   onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80'; }}
                 />
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute -top-6 -right-6 w-32 h-32 border-2 border-[#c17f59]/30 rounded-full"
+                  className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-20 md:w-32 h-20 md:h-32 border-2 border-[#c17f59]/30 rounded-full"
                 />
                 <motion.div
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
-                  className="absolute -bottom-6 -left-6 bg-[#c17f59] text-white p-6 rounded-2xl"
+                  className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-[#c17f59] text-white p-4 md:p-6 rounded-2xl"
                 >
-                  <p className="text-3xl font-light">3+</p>
+                  <p className="text-2xl md:text-3xl font-light">3+</p>
                   <p className="text-sm opacity-80">Years of Adventures</p>
                 </motion.div>
               </div>
