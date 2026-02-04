@@ -35,7 +35,7 @@ export default function AboutSection() {
   const stats = [
     { icon: Globe, value: 15, suffix: '+', label: 'Ciities Visited' },
     { icon: Camera, value: 20, suffix: '+', label: 'Stories Shared' },
-    { icon: Heart, value: 1, suffix: 'K+', label: 'People Encountered' },
+    { icon: Heart, value: 100, suffix: '+', label: 'People Encountered' },
     { icon: MapPin, value: 50, suffix: '+', label: 'Destinations' },
   ];
 

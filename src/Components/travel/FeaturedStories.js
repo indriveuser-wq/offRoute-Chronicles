@@ -89,13 +89,13 @@ export default function FeaturedStories({ posts }) {
 
           {/* Secondary Featured */}
           <div className="space-y-8">
-            {featured.slice(1, 3).map((post, index) => (
+            {featured.slice(1, 3).map((post) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.5 }}
               >
                 <Link to={`/blog/${post.id}`}>
                   <div className="group relative h-[220px] md:h-[240px] rounded-3xl overflow-hidden cursor-pointer">

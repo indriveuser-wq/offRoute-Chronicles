@@ -14,7 +14,10 @@ export default function CommentSection({ postId }) {
   const [comment, setComment] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState('');
+  const [formError, setFormError] = useState('');
   const queryClient = useQueryClient();
+
+  const isValidEmail = (value) => /\S+@\S+\.\S+/.test(value);
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ['comments', postId],
@@ -29,36 +32,57 @@ export default function CommentSection({ postId }) {
       setComment('');
       setReplyText('');
       setReplyingTo(null);
+      setFormError('');
     },
   });
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
-    if (!name || !comment) return;
+    setFormError('');
+
+    if (!name || !email || !comment) {
+      setFormError('Please provide your name, a valid email, and a comment.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setFormError('Please provide a valid email address.');
+      return;
+    }
 
     createCommentMutation.mutate({
       post_id: postId,
       author_name: name,
-      author_email: email || undefined,
+      author_email: email,
       content: comment,
     });
   };
 
   const handleSubmitReply = (parentId) => {
-    if (!name || !replyText) return;
+    setFormError('');
+
+    if (!name || !email || !replyText) {
+      setFormError('Please provide your name, a valid email, and a reply.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setFormError('Please provide a valid email address.');
+      return;
+    }
 
     createCommentMutation.mutate({
       post_id: postId,
       author_name: name,
-      author_email: email || undefined,
+      author_email: email,
       content: replyText,
-      parent_comment_id: parentId,
+      parent_id: parentId,
     });
   };
 
-  const topLevelComments = comments.filter(c => !c.parent_comment_id);
+  const topLevelComments = comments.filter(c => !c.parent_id && !c.parent_comment_id);
   const getReplies = (commentId) => 
-    comments.filter(c => c.parent_comment_id === commentId);
+    comments.filter(c => c.parent_id === commentId || c.parent_comment_id === commentId);
 
   return (
     <div className="mt-16 pt-12 border-t border-[#1a1a2e]/10">
@@ -77,6 +101,9 @@ export default function CommentSection({ postId }) {
         className="bg-[#f4e8d8] rounded-2xl p-6 mb-10"
       >
         <h4 className="text-lg text-[#1a1a2e] mb-4">Join the conversation</h4>
+        {formError && (
+          <p className="text-sm text-red-600 mb-4">{formError}</p>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <Input
@@ -93,11 +120,14 @@ export default function CommentSection({ postId }) {
             id="comment-email"
             name="email"
             type="email"
-            placeholder="Your email (optional)"
+            placeholder="Your email (required — will not be displayed)"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="bg-white border-[#1a1a2e]/10"
+            required
+            aria-describedby="comment-email-note"
           />
+          <p id="comment-email-note" className="text-xs text-[#1a1a2e]/60">We collect your email for moderation and contact only; it will not be shown publicly.</p>
         </div>
 
         <Textarea
@@ -112,7 +142,7 @@ export default function CommentSection({ postId }) {
 
         <Button
           type="submit"
-          disabled={createCommentMutation.isPending}
+          disabled={createCommentMutation.isPending || !name || !isValidEmail(email) || !comment}
           className="bg-[#c17f59] hover:bg-[#a66b48] text-white"
         >
           {createCommentMutation.isPending ? (
@@ -190,7 +220,7 @@ export default function CommentSection({ postId }) {
                     <div className="flex gap-2">
                       <Button
                         onClick={() => handleSubmitReply(commentItem.id)}
-                        disabled={createCommentMutation.isPending || !replyText}
+                        disabled={createCommentMutation.isPending || !replyText || !name || !isValidEmail(email)}
                         className="bg-[#c17f59] hover:bg-[#a66b48] text-white text-sm"
                       >
                         Post Reply
