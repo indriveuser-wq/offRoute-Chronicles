@@ -28,8 +28,27 @@ function initializeSupabase() {
       
       supabaseClient = createClient(
         process.env.REACT_APP_SUPABASE_URL,
-        process.env.REACT_APP_SUPABASE_ANON_KEY
+        process.env.REACT_APP_SUPABASE_ANON_KEY,
+        {
+          realtime: {
+            params: {
+              eventsPerSecond: 2,
+            },
+          },
+        }
       );
+      
+      // Suppress real-time connection errors
+      if (supabaseClient.realtime) {
+        supabaseClient.realtime.onclose = () => {
+          // Silently handle connection close
+        };
+        supabaseClient.realtime.onerror = (error) => {
+          // Silently handle errors to avoid console spam
+          // Real-time is optional, app works without it
+        };
+      }
+      
       console.log('✅ Supabase client created successfully!');
       return supabaseClient;
     } catch (error) {
@@ -290,6 +309,41 @@ class Base44Client {
               name: 'Tokyo, Japan',
               country: 'Japan',
               description: 'A vibrant metropolis blending tradition and modernity',
+              content: `# Tokyo, Japan
+
+Tokyo is a mesmerizing blend of ancient traditions and cutting-edge modernity. From serene temples to bustling tech hubs, this dynamic capital offers an unforgettable experience.
+
+## Must-See Attractions
+
+### Temples and Shrines
+- **Senso-ji Temple** - Famous historic Buddhist temple in Asakusa
+- **Meiji Shrine** - Dedicated to Emperor Meiji, surrounded by peaceful forests
+- **Fushimi Inari Shrine** - Known for its thousands of vermillion torii gates
+
+### Modern Landmarks
+- **Tokyo Tower** - Iconic red tower with panoramic city views
+- **Skytree** - Modern architectural marvel
+- **Shibuya Crossing** - The world's busiest pedestrian crossing
+
+## Neighborhoods to Explore
+
+**Shibuya** - Young, trendy, and vibrant with shopping and nightlife
+**Shinjuku** - Business district by day, entertainment hub by night
+**Asakusa** - Historic area preserving traditional Tokyo culture
+**Harajuku** - Fashion-forward district famous for youth culture
+**Ginza** - Upscale shopping and fine dining area
+
+## Food Scene
+
+Tokyo's food culture is world-renowned. Don't miss:
+- Ramen shops for authentic noodles
+- Sushi at Tsukiji market
+- Takoyaki (octopus balls) from street vendors
+- Izakayas for casual Japanese dining
+
+## Best Time to Visit
+
+Spring (March-May) and Fall (September-November) offer perfect weather. Cherry blossom season in spring is particularly magical.`,
               image: 'https://images.unsplash.com/photo-1540959375944-7049f642e9d5?w=500&h=350&fit=crop',
               category: 'city',
               featured: true,
@@ -299,6 +353,45 @@ class Base44Client {
               name: 'Bangkok, Thailand',
               country: 'Thailand',
               description: 'The city of angels with stunning temples and markets',
+              content: `# Bangkok, Thailand
+
+The City of Angels is a sensory explosion of colors, flavors, and spirituality. Bangkok seamlessly merges sacred temples with vibrant street life.
+
+## Iconic Temples
+
+### Grand Palace & Temple of the Emerald Buddha
+The most sacred Buddhist site in Thailand, featuring breathtaking architecture and intricate mosaics.
+
+### Wat Arun (Temple of Dawn)
+A stunning riverside temple with ornate spires reflected in the Chao Phraya River.
+
+### Wat Pho
+Home to the massive Reclining Buddha and a center for traditional Thai massage.
+
+## Markets & Shopping
+
+**Chatuchak Weekend Market** - Massive market with thousands of vendors
+**Floating Markets** - Experience traditional Thai commerce on water
+**Yaowarat** - Famous for gold shops and seafood restaurants
+
+## Street Food Paradise
+
+Bangkok is street food heaven:
+- Pad Thai from street vendors
+- Mango sticky rice
+- Satay skewers
+- Tom Yum soup
+- Fresh tropical fruits
+
+## Neighborhoods
+
+**Silom** - Entertainment district with great nightlife
+**Sukhumvit** - Modern area with malls and restaurants
+**Old City** - Historic district full of temples and charm
+
+## Practical Tips
+
+Use the BTS Skytrain for easy transportation. Wear respectful clothing when visiting temples. Always remove shoes before entering sacred spaces.`,
               image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=350&fit=crop',
               category: 'food_cafe',
               featured: true,
@@ -308,6 +401,49 @@ class Base44Client {
               name: 'Paris, France',
               country: 'France',
               description: 'The city of love and art',
+              content: `# Paris, France
+
+Paris, the capital of romance and culture, captivates millions with its timeless beauty, world-class art, and charming streets.
+
+## World-Famous Monuments
+
+### Eiffel Tower
+Iconic iron lattice tower offering panoramic city views from its multiple levels.
+
+### Louvre Museum
+Home to the Mona Lisa and thousands of masterpieces spanning centuries.
+
+### Notre-Dame Cathedral
+Gothic architectural marvel with stunning rose windows and intricate stonework.
+
+### Arc de Triomphe
+Grand monument honoring military victories with views from its terrace.
+
+## Charming Districts
+
+**Montmartre** - Bohemian hilltop village with artists and cafés
+**Latin Quarter** - Student district with historic colleges and bookshops
+**Marais** - Trendy area with galleries, boutiques, and museums
+**Champs-Élysées** - Famous avenue lined with shops and cafés
+
+## Art & Culture
+
+- Musée d'Orsay - Impressionist masterpieces
+- Versailles Palace - Royal grandeur and gardens
+- Picasso Museum - Works by the master painter
+- Street art in various neighborhoods
+
+## Parisian Cuisine
+
+Indulge in authentic French dining:
+- Croissants and pastries
+- Crêpes from street vendors
+- Café culture with coffee and wine
+- Fine dining experiences
+
+## Best Time to Visit
+
+Spring (April-May) and Fall (September-October) offer pleasant weather and fewer crowds.`,
               image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&h=350&fit=crop',
               category: 'city',
               featured: true,
@@ -317,6 +453,53 @@ class Base44Client {
               name: 'Bali, Indonesia',
               country: 'Indonesia',
               description: 'Tropical paradise with temples and beaches',
+              content: `# Bali, Indonesia
+
+Bali is a tropical island paradise offering spiritual experiences, beach beauty, and vibrant culture all in one magical destination.
+
+## Spiritual Sites
+
+### Tanah Lot Temple
+Dramatically perched on a rock formation in the sea, especially stunning at sunset.
+
+### Tirta Empul
+Holy spring temple with pools believed to have healing properties.
+
+### Besakhi Temple
+Bali's mother temple, sitting majestically on Mount Agung.
+
+## Beautiful Beaches
+
+- **Seminyak Beach** - Trendy with beach clubs and water sports
+- **Uluwatu Beach** - Dramatic cliffs and white sand
+- **Nusa Dua** - Protected beach with resort amenities
+- **Canggu Beach** - Surfer's paradise
+
+## Cultural Experiences
+
+- Traditional Balinese dance performances
+- Batik making workshops
+- Cooking classes with local chefs
+- Rice terrace trekking in Ubud
+
+## Ubud - Heart of Bali
+
+The cultural center featuring:
+- Monkey Forest Sanctuary
+- Artist studios and galleries
+- Traditional markets
+- Peaceful rice plantations
+
+## Water Sports
+
+- Surfing for all skill levels
+- Snorkeling and diving
+- White water rafting
+- Kayaking in mangrove forests
+
+## Practical Information
+
+Dress respectfully at temples. The dry season (April-October) is best. USD and credit cards are widely accepted.`,
               image: 'https://images.unsplash.com/photo-1537225228614-b4fad34a0b60?w=500&h=350&fit=crop',
               category: 'adventure',
               featured: false,
@@ -326,6 +509,55 @@ class Base44Client {
               name: 'Kathmandu, Nepal',
               country: 'Nepal',
               description: 'Gateway to the Himalayas with rich culture',
+              content: `# Kathmandu, Nepal
+
+Kathmandu, the gateway to the Himalayas, is a city steeped in spirituality, culture, and breathtaking mountain views.
+
+## Sacred Squares & Temples
+
+### Durbar Square
+UNESCO World Heritage Site with historic palaces and temples dating back centuries.
+
+### Boudhanath Stupa
+One of the world's largest stupas, a major pilgrimage site surrounded by prayer wheels.
+
+### Pashupatinath Temple
+Hinduism's most sacred temple dedicated to Shiva.
+
+## Mountain Views
+
+- Hiking to viewpoints overlooking the Himalayas
+- Clear morning views of snow-capped peaks
+- Helicopter tours for aerial perspectives
+- Paragliding opportunities
+
+## Markets & Culture
+
+**Thamel District** - Tourist hub with shops, restaurants, and trekking agencies
+**Asan Market** - Authentic local spice market
+**Bhaktapur** - Ancient city preserved in time
+**Patan** - Artistic center with traditional crafts
+
+## Spiritual Experiences
+
+- Meditation and yoga classes
+- Temple visits during festival seasons
+- Monastery tours
+- Buddhist teachings
+
+## Trekking Base
+
+Kathmandu is the perfect starting point for:
+- Everest Base Camp Trek
+- Annapurna Circuit
+- Langtang Valley Trek
+
+## Local Cuisine
+
+- Momos (dumplings)
+- Dal Bhat (lentils and rice)
+- Thukpa (noodle soup)
+- Local Himalayan coffee`,
               image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=350&fit=crop',
               category: 'heritage',
               featured: false,
@@ -335,6 +567,54 @@ class Base44Client {
               name: 'Maldives',
               country: 'Maldives',
               description: 'Island nation with crystal clear waters',
+              content: `# Maldives
+
+The Maldives is a tropical paradise of over 1,000 islands surrounded by crystal-clear turquoise waters and pristine white-sand beaches.
+
+## Island Groups (Atolls)
+
+### North & South Malé Atolls
+Closest to the capital, perfect for quick getaways and budget accommodations.
+
+### Ari Atoll
+World-class diving destination with abundant marine life and luxury resorts.
+
+### Baa Atoll
+Biosphere reserve with exceptional snorkeling and diving opportunities.
+
+## Water Activities
+
+- **Snorkeling** - See colorful fish and coral right from the beach
+- **Diving** - World-class dive sites for all levels
+- **Surfing** - Consistent waves at various breaks
+- **Fishing** - Game fishing or traditional methods
+- **Water Sports** - Kayaking, windsurfing, jet skiing
+
+## Marine Life
+
+Encounter:
+- Manta rays and sea turtles
+- Tropical fish species
+- Vibrant coral gardens
+- Occasional whale sharks
+
+## Beach & Resort Life
+
+- Overwater bungalows with glass floors
+- Private beach experiences
+- Spa treatments with ocean views
+- Sunset fishing trips
+
+## Local Culture
+
+- Malé city exploration
+- Traditional fishing villages
+- Local markets and cuisine
+- Cultural performances
+
+## Best Time to Visit
+
+November to April (dry season) offers calm waters and clear skies. Perfect for diving and beach time.`,
               image: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=500&h=350&fit=crop',
               category: 'adventure',
               featured: false,
@@ -369,6 +649,41 @@ class Base44Client {
               name: 'Tokyo, Japan',
               country: 'Japan',
               description: 'A vibrant metropolis blending tradition and modernity',
+              content: `# Tokyo, Japan
+
+Tokyo is a mesmerizing blend of ancient traditions and cutting-edge modernity. From serene temples to bustling tech hubs, this dynamic capital offers an unforgettable experience.
+
+## Must-See Attractions
+
+### Temples and Shrines
+- **Senso-ji Temple** - Famous historic Buddhist temple in Asakusa
+- **Meiji Shrine** - Dedicated to Emperor Meiji, surrounded by peaceful forests
+- **Fushimi Inari Shrine** - Known for its thousands of vermillion torii gates
+
+### Modern Landmarks
+- **Tokyo Tower** - Iconic red tower with panoramic city views
+- **Skytree** - Modern architectural marvel
+- **Shibuya Crossing** - The world's busiest pedestrian crossing
+
+## Neighborhoods to Explore
+
+**Shibuya** - Young, trendy, and vibrant with shopping and nightlife
+**Shinjuku** - Business district by day, entertainment hub by night
+**Asakusa** - Historic area preserving traditional Tokyo culture
+**Harajuku** - Fashion-forward district famous for youth culture
+**Ginza** - Upscale shopping and fine dining area
+
+## Food Scene
+
+Tokyo's food culture is world-renowned. Don't miss:
+- Ramen shops for authentic noodles
+- Sushi at Tsukiji market
+- Takoyaki (octopus balls) from street vendors
+- Izakayas for casual Japanese dining
+
+## Best Time to Visit
+
+Spring (March-May) and Fall (September-November) offer perfect weather. Cherry blossom season in spring is particularly magical.`,
               image: 'https://images.unsplash.com/photo-1540959375944-7049f642e9d5?w=500&h=350&fit=crop',
               category: 'city',
               featured: true,

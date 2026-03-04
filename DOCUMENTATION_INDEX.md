@@ -29,6 +29,14 @@ You now have a **professional travel blog** with:
 | [CMS_PHOTO_GALLERY_GUIDE.md](./CMS_PHOTO_GALLERY_GUIDE.md) | Complete feature overview | 10 min |
 | [CMS_SETUP_GUIDE.md](./CMS_SETUP_GUIDE.md) | Detailed technical reference | 15 min |
 
+### **Engage Subscribers** ↓
+
+| Document | Purpose | Setup Time |
+|----------|---------|-----------|
+| [SUPABASE_EMAIL_QUICK_SETUP.md](./SUPABASE_EMAIL_QUICK_SETUP.md) | 5-minute email notification setup | 5 min |
+| [SUPABASE_EMAIL_SETUP.md](./SUPABASE_EMAIL_SETUP.md) | Detailed email implementation guide | 20 min |
+| [setup-email-notifications.sql](./setup-email-notifications.sql) | Ready-to-use SQL triggers | Copy-paste |
+
 ---
 
 ## 🚀 Three Paths Forward
@@ -102,6 +110,9 @@ You now have a **professional travel blog** with:
 ### "How do I add gallery images?"
 → [CMS_PHOTO_GALLERY_GUIDE.md](./CMS_PHOTO_GALLERY_GUIDE.md) → "Adding Gallery Images"
 
+### "How do I notify subscribers of new posts?"
+→ [SUPABASE_EMAIL_QUICK_SETUP.md](./SUPABASE_EMAIL_QUICK_SETUP.md) (5 min setup!)
+
 ### "How do I change a post image?"
 → [MOCK_DATA_EDITING.md](./MOCK_DATA_EDITING.md) → "Change the Cover Image"
 
@@ -135,6 +146,9 @@ offRoute-Chronicles/
 │  ├─ MOCK_DATA_EDITING.md         ← Edit samples
 │  ├─ CMS_PHOTO_GALLERY_GUIDE.md   ← Features
 │  ├─ CMS_SETUP_GUIDE.md           ← Technical
+│  ├─ SUPABASE_EMAIL_QUICK_SETUP.md ← Email setup (5 min)
+│  ├─ SUPABASE_EMAIL_SETUP.md      ← Email detailed guide
+│  ├─ setup-email-notifications.sql← SQL triggers
 │  └─ DOCUMENTATION_INDEX.md       ← This file
 │
 ├─ 🔧 Configuration
@@ -255,6 +269,7 @@ offRoute-Chronicles/
 | Images not loading | [MOCK_DATA_EDITING.md](./MOCK_DATA_EDITING.md#troubleshooting) |
 | Supabase issues | [SUPABASE_QUICKSTART.md](./SUPABASE_QUICKSTART.md#troubleshooting) |
 | Gallery not showing | [CMS_PHOTO_GALLERY_GUIDE.md](./CMS_PHOTO_GALLERY_GUIDE.md#photo-gallery-feature) |
+| Subscriber emails not sending | [SUPABASE_EMAIL_SETUP.md](./SUPABASE_EMAIL_SETUP.md#-troubleshooting) |
 | App not running | Check terminal, run `npm start` |
 
 ---

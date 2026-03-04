@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '../../api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Send, User, Clock, Reply } from 'lucide-react';
+import { MessageCircle, Send, User, Clock, Reply, AlertCircle } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { formatDistanceToNow } from 'date-fns';
+
+const MAX_COMMENT_LENGTH = 250;
 
 export default function CommentSection({ postId }) {
   const [name, setName] = useState('');
@@ -50,6 +52,11 @@ export default function CommentSection({ postId }) {
       return;
     }
 
+    if (comment.length > MAX_COMMENT_LENGTH) {
+      setFormError(`Comment exceeds the maximum limit of ${MAX_COMMENT_LENGTH} characters.`);
+      return;
+    }
+
     createCommentMutation.mutate({
       post_id: postId,
       author_name: name,
@@ -68,6 +75,11 @@ export default function CommentSection({ postId }) {
 
     if (!isValidEmail(email)) {
       setFormError('Please provide a valid email address.');
+      return;
+    }
+
+    if (replyText.length > MAX_COMMENT_LENGTH) {
+      setFormError(`Reply exceeds the maximum limit of ${MAX_COMMENT_LENGTH} characters.`);
       return;
     }
 
@@ -136,13 +148,31 @@ export default function CommentSection({ postId }) {
           placeholder="Share your thoughts..."
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="bg-white border-[#1a1a2e]/10 min-h-[120px] mb-4"
+          className={`bg-white border-[#1a1a2e]/10 min-h-[120px] mb-2 ${
+            comment.length > MAX_COMMENT_LENGTH ? 'border-red-500' : ''
+          }`}
           required
+          maxLength={MAX_COMMENT_LENGTH + 1}
         />
+        <div className="flex items-center justify-between mb-4">
+          <span className={`text-xs ${
+            comment.length > MAX_COMMENT_LENGTH 
+              ? 'text-red-600 font-semibold' 
+              : 'text-[#1a1a2e]/60'
+          }`}>
+            {comment.length} / {MAX_COMMENT_LENGTH} characters
+          </span>
+          {comment.length > MAX_COMMENT_LENGTH && (
+            <span className="text-xs text-red-600 flex items-center gap-1">
+              <AlertCircle className="w-4 h-4" />
+              Exceeds limit
+            </span>
+          )}
+        </div>
 
         <Button
           type="submit"
-          disabled={createCommentMutation.isPending || !name || !isValidEmail(email) || !comment}
+          disabled={createCommentMutation.isPending || !name || !isValidEmail(email) || !comment || comment.length > MAX_COMMENT_LENGTH}
           className="bg-[#c17f59] hover:bg-[#a66b48] text-white"
         >
           {createCommentMutation.isPending ? (
@@ -215,12 +245,24 @@ export default function CommentSection({ postId }) {
                       placeholder="Write a reply..."
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      className="bg-white border-[#1a1a2e]/10 min-h-[80px] mb-3"
+                      className={`bg-white border-[#1a1a2e]/10 min-h-[80px] mb-2 ${
+                        replyText.length > MAX_COMMENT_LENGTH ? 'border-red-500' : ''
+                      }`}
+                      maxLength={MAX_COMMENT_LENGTH + 1}
                     />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`text-xs ${
+                        replyText.length > MAX_COMMENT_LENGTH 
+                          ? 'text-red-600 font-semibold' 
+                          : 'text-[#1a1a2e]/60'
+                      }`}>
+                        {replyText.length} / {MAX_COMMENT_LENGTH} characters
+                      </span>
+                    </div>
                     <div className="flex gap-2">
                       <Button
                         onClick={() => handleSubmitReply(commentItem.id)}
-                        disabled={createCommentMutation.isPending || !replyText || !name || !isValidEmail(email)}
+                        disabled={createCommentMutation.isPending || !replyText || !name || !isValidEmail(email) || replyText.length > MAX_COMMENT_LENGTH}
                         className="bg-[#c17f59] hover:bg-[#a66b48] text-white text-sm"
                       >
                         Post Reply

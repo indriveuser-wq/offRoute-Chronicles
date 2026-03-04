@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '../api/base44Client';
 import { motion } from 'framer-motion';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Compass } from 'lucide-react';
+import { ArrowLeft, Compass, MapPin, Calendar } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 export default function DestinationDetail() {
   const { id } = useParams();
@@ -62,6 +63,86 @@ export default function DestinationDetail() {
       </section>
 
       <section className="py-12 px-4 md:px-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Destination Content */}
+          {destination.content && (
+            <motion.article
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="prose prose-lg prose-slate max-w-none mb-12"
+            >
+              <ReactMarkdown
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="text-4xl font-light text-[#1a1a2e] mt-0 mb-6">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-2xl font-light text-[#1a1a2e] mt-10 mb-4">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-xl font-light text-[#1a1a2e] mt-8 mb-4">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-[#1a1a2e]/80 leading-relaxed mb-6">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside mb-6 text-[#1a1a2e]/80">
+                      {children}
+                    </ul>
+                  ),
+                  li: ({ children }) => (
+                    <li className="mb-2">{children}</li>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-[#c17f59] pl-6 my-8 italic text-[#1a1a2e]/70">
+                      {children}
+                    </blockquote>
+                  ),
+                }}
+              >
+                {destination.content}
+              </ReactMarkdown>
+            </motion.article>
+          )}
+
+          {/* Highlights & Best Season */}
+          {(destination.highlights || destination.best_season) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-[#f4e8d8] rounded-2xl p-8 mb-12"
+            >
+              {destination.best_season && (
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Calendar className="w-5 h-5 text-[#c17f59]" />
+                    <h3 className="text-lg font-semibold text-[#1a1a2e]">Best Time to Visit</h3>
+                  </div>
+                  <p className="text-[#1a1a2e]/80">{destination.best_season}</p>
+                </div>
+              )}
+
+              {destination.highlights && destination.highlights.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Key Highlights</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {destination.highlights.map((highlight, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <div className="w-2 h-2 rounded-full bg-[#c17f59] mt-2 flex-shrink-0"></div>
+                        <span className="text-[#1a1a2e]/80">{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-12 px-4 md:px-8 border-t border-[#1a1a2e]/10">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-light mb-6">Stories & Posts about {destination.name}</h2>
           {posts.length === 0 ? (

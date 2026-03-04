@@ -51,7 +51,7 @@ export default function HeroSection() {
           rotate: [0, 5, 0],
         }}
         transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#c17f59]/20 blur-3xl"
+        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#c17f59]/20 blur-3xl pointer-events-none"
       />
       <motion.div
         animate={{
@@ -59,7 +59,7 @@ export default function HeroSection() {
           rotate: [0, -5, 0],
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-[#87a878]/20 blur-3xl"
+        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-[#87a878]/20 blur-3xl pointer-events-none"
       />
 
       {/* Main Content */}

@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Short description"
     },
+    "content": {
+      "type": "string",
+      "description": "Full destination details in markdown"
+    },
     "image": {
       "type": "string",
       "description": "Main image URL"
